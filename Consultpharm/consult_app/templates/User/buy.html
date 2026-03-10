@@ -1,0 +1,55 @@
+{% extends "user/header.html" %}
+{% block content %}
+{% load static %}
+
+<!-- Section Title with Icon -->
+<div class="section-title text-center mb-5 mt-2 bg-dark p-5 rounded-3">
+    <h1 class="display-4 fw-bold text-primary">Buy Medicines</h1>
+    <p class="lead text-light">Order your medicines easily by entering the names below</p>
+</div>
+    <!-- Success/Error Message -->
+    <div class="col-5 m-auto">
+        {% if messages %}
+        <div id="messages-container">
+            {% for message in messages %}
+            <h6 class="alert alert-success p-2">{{ message }}</h6>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(() => {
+                const container = document.getElementById('messages-container');
+                if (container) {
+                    container.style.display = 'none';
+                }
+            }, 3500); 
+        </script>
+        {% endif %}
+    </div>
+</div>
+<!-- Form Container -->
+<div class="container">
+    <div class="row justify-content-center">
+       
+
+        <!-- Right side: Form -->
+        <div class="col-md-8">
+            <form action="{% url 'buy_medicines' %}" method="POST" class="shadow-lg p-4 rounded-3 bg-light">
+                {% csrf_token %}
+                
+                <!-- Input Field -->
+                <div class="mb-4">
+                    <label for="medicines" class="form-label fs-5 fw-bold text-dark">Add Medicines (Separate with commas)</label>
+                    <input type="text" name="medicines" id="medicines" class="form-control form-control-lg p-3" placeholder="Enter medicines" required>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-4 py-2">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+{% endblock content %}

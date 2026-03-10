@@ -1,0 +1,81 @@
+{% extends "user/header.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Optional sidebar or empty space -->
+        <div class="col-sm-2">
+            <!-- Sidebar or extra content can be added here -->
+        </div>
+
+        <div class="col-sm-8">
+            <div class="text-center py-5 mb-5 bg-light rounded shadow-sm">
+                <h3 class="font-weight-bold text-primary mb-4">User Queries</h3>
+                
+                <!-- Table with Enhanced Styling -->
+                <table class="table table-hover table-bordered table-responsive-sm">
+                    <thead class="thead-dark">
+                        <tr class="text-center">
+                            <th>#</th>
+                            <th>Doctor</th>
+                            <th>Health Problem</th>
+                            <th>Reply</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data %}
+                        <tr class="{% cycle 'table-light' 'table-secondary' %}">
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td>{{ i.doctor.Name }}</td>
+                            <td><b>{{ i.problem }}</b>
+                                <br><small class="text-muted">{{ i.date|date:"F j, Y" }}</small>
+                            </td>
+                            <td>
+                                {% if i.reply %}
+                                    <b>{{ i.reply }}</b>
+                                {% else %}
+                                    <p class="text-muted">No reply yet</p>
+                                {% endif %}
+                                <p><strong>Medicines:</strong> 
+                                    <span id="medicine-{{ forloop.counter }}">{{ i.medicines }}</span>
+                                    <button class="btn btn-sm btn-info ml-2" onclick="copyMedicine({{ forloop.counter }})">Copy</button>
+                                </p>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No feedback available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Optional sidebar or empty space -->
+        <div class="col-sm-2">
+            <!-- Sidebar or extra content can be added here -->
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for copying to clipboard with feedback -->
+<script>
+    function copyMedicine(counter) {
+        // Get the text content of the medicine span element
+        var medicineText = document.getElementById('medicine-' + counter).innerText;
+        
+        // Use the Clipboard API for a modern solution
+        navigator.clipboard.writeText(medicineText).then(function() {
+            // Notify the user that the text has been copied
+            alert("Medicines copied to clipboard!");
+        }).catch(function(error) {
+            // Handle errors (e.g., if the clipboard operation fails)
+            console.error("Clipboard copy failed:", error);
+            alert("Failed to copy medicines.");
+        });
+    }
+</script>
+
+{% endblock content %}

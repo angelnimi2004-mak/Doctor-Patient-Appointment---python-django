@@ -1,0 +1,73 @@
+{% extends "header.html" %}
+{% block content %}
+{% load static %}
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 text-white text-center">
+  <h1 class="display-3 font-weight-bold">Login</h1>
+  <p class="lead">Access your account and manage your settings. Enter your credentials to get started.</p>
+</div>
+<!-- Page Header End -->
+
+<div class="col-5 m-auto">
+  {% if messages %}
+  <div id="messages-container">
+      {% for message in messages %}
+          <h6 class="alert alert-success p-2">{{ message }}</h6>
+      {% endfor %}
+  </div>
+  <script>
+      setTimeout(() => {
+          const container = document.getElementById('messages-container');
+          if (container) {
+              container.style.display = 'none';
+          }
+      }, 1500); 
+  </script>
+  {% endif %}
+</div>
+
+<div class="container">
+  <section class="gradient-custom">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-5">
+          <div class="card bg-dark text-white shadow-lg" style="border-radius: 1.5rem;">
+            <div class="card-body p-5 text-center">
+
+              <h3 class="text-white mb-4 text-uppercase">Welcome Back!</h3>
+              
+              <!-- Login Form Start -->
+              <form action="{% url 'login_action' %}" method="post" id="myform">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control shadow-sm" id="username" name="username" placeholder="User Name" required>
+                  <label for="username" class="text-dark"><i class="fa fa-user"></i> User Name <span class="text-danger">*</span></label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control shadow-sm" id="password" name="password" placeholder="Password" required>
+                  <label for="password" class="text-dark"><i class="fa fa-lock"></i> Password <span class="text-danger">*</span></label>
+                </div>
+
+                
+
+                <div class="text-center mt-4">
+                  <button class="btn btn-primary w-50 shadow-sm" type="submit">Login</button>
+                </div>
+              </form>
+              <!-- Login Form End -->
+
+              <div class="mt-4">
+                <p class="mb-0">Don't have an account? <a href="{% url 'user_registration' %}" class="text-white-50 fw-bold">Register</a></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "Master/header.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Edit News</h2>
+
+    <!-- Display messages -->
+    {% if messages %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <!-- Edit News Form -->
+    <div class="card shadow-sm border-0 rounded">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Title Field -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ news_item.title }}" required>
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="6" required>{{ news_item.description }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Update News</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "Master/header.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">News List</h2>
+
+        <!-- Display messages -->
+        {% if messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        <!-- News List Table -->
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for news_item in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ news_item.title }}</td>
+                        <td>{{ news_item.description|truncatewords:10 }}</td>
+                        <td>{{ news_item.date|date:"F j, Y" }}</td>
+                        <td>
+                            <!-- Action Buttons: Edit/Delete -->
+                            <a href="{% url 'edit_news' %}?news_id={{news_item.news_id}}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_news' %}?news_id={{news_item.news_id}}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No news available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

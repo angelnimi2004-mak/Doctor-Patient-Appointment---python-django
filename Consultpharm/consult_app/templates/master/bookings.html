@@ -1,0 +1,118 @@
+{% extends "Master/header.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <h2 class="mb-4 text-center text-primary font-weight-bold">Bookings</h2>
+    <main>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Package</th>
+                        <th>Service Date</th>
+                        <th>Amount</th>
+                        <th>Booking Date</th>
+                        <th>User Details</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in data %}
+                    <tr>
+                        <td class="align-middle">
+                            <span class="mb-0">
+                                {{ booking.package.name }}
+                                {% if booking.status == "completed" %}
+                               <i class="bi bi-check-circle-fill" style="color: green ;"></i>
+                                {% endif %}
+                            </span>
+                            
+                          
+                        </td>
+                        <td class="align-middle">{{ booking.service_date|date:"F j, Y" }}</td>
+                        <td class="align-middle">${{ booking.amount|floatformat:2 }}</td>
+                        <td class="align-middle"><small>{{ booking.booking_date|date:"F j, Y" }}</small></td>
+
+                        <td class="align-middle">
+                            <h6 class="mb-0"><strong>{{ booking.user.Name }}</strong> </h6>
+                            <small>
+                                <i class="bi bi-house" ></i> : {{ booking.user.Address }}
+                            </small><br>
+                            <small>
+                                <i class="bi bi-telephone" ></i> :  {{ booking.user.phone_number }}
+                            </small>
+                        </td>
+                        
+                        
+                        <td class="align-middle">
+                            {% if not booking.has_workassign %}
+                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#assignWorkerModal{{ booking.b_id }}">
+                                <i class="bi bi-person-plus"></i> <small>Assign Worker</small>
+                            </button>
+                            {% else %}
+                            <div class="badge bg-dark text-warning p-2"><small>Assigned</small></div>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="assignWorkerModal{{ booking.b_id }}" tabindex="-1"
+                        aria-labelledby="assignWorkerModalLabel{{ booking.b_id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content rounded-4 shadow-lg">
+                                <div class="modal-header bg-info text-white border-bottom-0">
+                                    <h5 class="modal-title" id="assignWorkerModalLabel{{ booking.b_id }}">
+                                        Assign Worker to Booking #{{ booking.b_id }}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{% url 'assign_worker' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="b_id" value="{{ booking.b_id }}">
+                                        <div class="mb-3">
+                                            <label for="workerSelect{{ booking.b_id }}" class="form-label">Select
+                                                Worker</label>
+                                            <select id="workerSelect{{ booking.b_id }}" name="worker" class="form-select"
+                                                required>
+                                                <option value="" disabled selected>Select a worker</option>
+                                                {% for worker in data1 %}
+                                                <option value="{{ worker.w_id }}">{{ worker.Name }}</option>
+                                                {% empty %}
+                                                <option disabled>No workers available</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100 py-2">Assign Worker</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-danger">No bookings found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+{% endblock content %}

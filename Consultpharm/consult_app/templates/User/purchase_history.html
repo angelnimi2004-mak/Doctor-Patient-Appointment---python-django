@@ -1,0 +1,47 @@
+{% extends "user/header.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 card shadow-lg" style="background-color: #f4f4f9;">
+    <div class="section-title text-center mb-5 mt-2 bg-primary text-white p-5 rounded-3">
+        <h1 class="display-4 fw-bold">Purchase History</h1>
+    </div>
+
+    <!-- Table to display past orders -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th><i class="fas fa-capsules"></i> <b>Item Name</b></th>
+                    <th><i class="fas fa-dollar-sign"></i> Amount</th>
+                    <th><i class="fas fa-truck"></i> Delivery Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>
+                        <i class="fas fa-capsules"></i> <b>{{ i.item_name }}</b>
+                    </td>
+                    <td>
+                        <strong><i class="fas fa-dollar-sign"></i> {{ i.amount }} Paid</strong>
+                    </td>
+                    <td>
+                        {% if i.status == 'Delivered' %}
+                            <strong class="text-success"><i class="fas fa-check-circle"></i> Delivered</strong>
+                        {% else %}
+                            <strong class="text-warning"><i class="fas fa-times-circle"></i> Not Available</strong>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No purchase history available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

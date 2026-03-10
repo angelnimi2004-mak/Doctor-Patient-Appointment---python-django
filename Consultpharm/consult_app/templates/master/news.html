@@ -1,0 +1,49 @@
+{% extends "Master/header.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Add/Update Medical News</h2>
+    
+    <!-- Display messages -->
+                 {% if messages %}
+                <div id="messages-container">
+                    {% for message in messages %}
+                        <h6 class="alert alert-success p-2">{{ message }}</h6>
+                    {% endfor %}
+                </div>
+                <script>
+                    setTimeout(() => {
+                        const container = document.getElementById('messages-container');
+                        if (container) {
+                            container.style.display = 'none';
+                        }
+                    }, 1500); 
+                </script>
+                {% endif %}
+    
+    <!-- Form to Add/Update News -->
+    <div class="card shadow-sm border-0 rounded">
+        <div class="card-body">
+            <form method="post" action="{% url 'news' %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
+                </div>
+                <input type="submit">
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

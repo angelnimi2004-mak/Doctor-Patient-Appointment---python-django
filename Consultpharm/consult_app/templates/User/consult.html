@@ -1,0 +1,75 @@
+{% extends "user/header.html" %}
+{% block content %}
+{% load static %}
+
+<!-- Section Title -->
+<div class="section-title text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary">Consultation with Dr. {{ dr.Name }}</h1>
+    <p class="lead text-muted">Describe your health problem, and the doctor will get back to you with a response and
+        suggestions.</p>
+</div>
+
+<div class="col-5 m-auto">
+    {% if messages %}
+    <div id="messages-container">
+        {% for message in messages %}
+        <h6 class="alert alert-success p-2">{{ message }}</h6>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                container.style.display = 'none';
+            }
+        }, 1500); 
+    </script>
+    {% endif %}
+</div>
+<!-- Consultation Layout -->
+<div class="container">
+    <div class="row">
+
+
+
+        <!-- Consultation Form - Right Side -->
+        <div class="col-lg-8 m-auto">
+            <div class="card shadow-lg border-0 rounded-3 bg-white">
+                <div class="card-body">
+                    <h4 class="card-title text-uppercase fw-bold text-dark">Describe Your Health Problem</h4>
+                    <form method="POST" action="{% url 'consult_withdr' %}">
+                        {% csrf_token %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <input type="hidden" value="{{dr.d_id}}" name="d_id">
+
+                                    <td><strong>Name:</strong></td>
+                                    <td><input class="form-control " value="{{user.Name}}" name="name"
+                                            placeholder="Your Name" required></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Health Problem:</strong></td>
+                                    <td><textarea class="form-control" name="problem" rows="5"
+                                            placeholder="Describe your symptoms or health problem..."
+                                            required></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg">Send Request</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table>
+
+    </table>
+</div>
+
+{% endblock content %}

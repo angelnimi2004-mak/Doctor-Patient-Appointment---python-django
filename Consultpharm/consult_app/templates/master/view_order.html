@@ -1,0 +1,94 @@
+{% extends "Master/header.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Medicine Orders</h2>
+    
+    <!-- Display Django messages (success or error) -->
+    <div class="col-7 m-auto">
+        {% if messages %}
+        <div id="messages-container">
+            {% for message in messages %}
+                <h6 class="alert alert-success p-2">{{ message }}</h6>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(() => {
+                const container = document.getElementById('messages-container');
+                if (container) {
+                    container.style.display = 'none';
+                }
+            }, 2500); 
+        </script>
+        {% endif %}
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Customer Details</th>
+                <th>Item Name</th>
+                <th>Amount</th>
+                <th>Delivery Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in data %}
+                <form method="POST" action="{% url 'view_order' %}">
+                    {% csrf_token %}
+                    <tr>
+                        <td>
+                            <strong>{{ i.user.Name }}</strong>
+                            <br><i>{{ i.user.Email }}</i>
+                            <br><small>{{ i.user.Address }}</small>
+                        </td>
+                        <td>
+                            <b>{{ i.item_name }}</b>
+                            <br><small>{{ i.booking_date }}</small>
+                        </td>
+                        <td>
+                            <!-- Input field for amount -->
+                            <input type="number" name="amount" value="{{ i.amount }}" class="form-control" id="amount-{{ i.b_id }}" required placeholder="Enter the Amount">
+                            <input type="hidden" name="b_id" value="{{ i.b_id }}">
+                        </td>
+                        <td>
+                            <!-- Dropdown to select the delivery status -->
+                            <select name="status" class="form-control mt-2" id="status-{{ i.b_id }}" onchange="toggleAmountField({{ i.b_id }})">
+                                <option value="Delivered" {% if i.status == "Delivered" %}selected{% endif %}>Deliver</option>
+                                <option value="Not Available" {% if i.status == "Not Available" %}selected{% endif %}>Not Available</option>
+                            </select>
+                        </td>
+                        <td>
+                            <!-- Submit button for this row -->
+                            <button type="submit" class="btn btn-primary mt-2">Update</button>
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Function to toggle the required field based on the delivery status
+    function toggleAmountField(b_id) {
+        const statusSelect = document.getElementById('status-' + b_id);
+        const amountInput = document.getElementById('amount-' + b_id);
+
+        if (statusSelect.value === 'Not Available') {
+            amountInput.removeAttribute('required');
+            amountInput.value = ''; // Clear the amount if status is "Not Available"
+        } else {
+            amountInput.setAttribute('required', 'required');
+        }
+    }
+
+    // Initialize the amount field state when the page loads
+    {% for i in data %}
+        toggleAmountField({{ i.b_id }});
+    {% endfor %}
+</script>
+
+{% endblock %}

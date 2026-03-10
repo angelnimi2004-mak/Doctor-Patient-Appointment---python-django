@@ -1,0 +1,96 @@
+{% extends "USER/header.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Main Container -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <!-- Feedback Form Section -->
+        <div class="col-lg-6 mb-5">
+            <h2 class="text-center mb-4" style="font-family: 'Arial', sans-serif; color: #333;">We Value Your Feedback</h2>
+            <div class="card p-4 shadow-lg rounded" style="background-color: #fff; border: none; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+                <form method="post" action="{% url 'feedback' %}">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <textarea id="feedback" name="feedback" class="form-control" rows="6" placeholder="Share your thoughts with us..." required style="border-radius: 12px; border: 1px solid #ddd; resize: none; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); font-size: 1.1rem; padding: 10px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" style="border-radius: 12px; padding: 12px; font-weight: bold;">Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Previous Feedbacks Section -->
+        <div class="col-lg-6 mb-5">
+            <h2 class="text-center mb-4" style="font-family: 'Arial', sans-serif; color: #333;">Previous Feedbacks</h2>
+            <div class="card p-4 shadow-lg rounded" style="background-color: #f9f9f9; border: none; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+                {% if data %}
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="font-size: 1.1rem; color: #333;">User</th>
+                                <th style="font-size: 1.1rem; color: #333;">Date</th>
+                                <th style="font-size: 1.1rem; color: #333;">Feedback</th>
+                                <th style="font-size: 1.1rem; color: #333;">Reply</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for feedback in data %}
+                                <tr>
+                                    <td>{{ feedback.user.Name }}</td>
+                                    <td>{{ feedback.date|date:"F j, Y" }}</td>
+                                    <td>{{ feedback.feedback|truncatewords:5 }}</td>
+                                    <td>
+                                        {% if feedback.reply %}
+                                            <div class="alert alert-info p-2 rounded" style="background-color: #d1ecf1; border-color: #bee5eb;">
+                                                {{ feedback.reply }}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted">No reply</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-warning text-center rounded" style="background-color: #fff3cd; border-color: #ffeeba;">No feedback available..!</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        <div class="col-12">
+            {% if messages %}
+                <div id="messages-container">
+                    {% for message in messages %}
+                        <div class="alert alert-success p-2 text-center" style="background-color: #28a745; color: white; border-radius: 10px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <script>
+                    setTimeout(() => {
+                        const container = document.getElementById('messages-container');
+                        if (container) {
+                            container.style.display = 'none';
+                        }
+                    }, 2500); 
+                </script>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- JavaScript for auto-dismiss messages -->
+<script>
+    setTimeout(function () {
+        var alert = document.querySelector('.alert-dismissible');
+        if (alert) {
+            alert.style.display = 'none';
+        }
+    }, 5000);  // Auto-dismiss after 5 seconds
+</script>
+
+{% endblock %}
